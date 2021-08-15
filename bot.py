@@ -3,7 +3,8 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from os import environ
 from dotenv import load_dotenv
-import sqlite3
+from sqlite3 import connect
+from sqlite3 import OperationalError
 
 
 load_dotenv()  # take environment variables from .env.
@@ -36,19 +37,21 @@ def edit_word(update, context):
 
 
 def start(update, context):
-    conn = sqlite3.connect('word.db')
+    conn = connect('word.db')
     c = conn.cursor()
-    c.execute("""CREATE TABLE words (
-        russian text,
-        english text
-    )""")  # TODO if sqlite3.OperationalError then dont create
+    try:
+        c.execute("""CREATE TABLE words (
+            russian text,
+            english text
+        )""")  # TODO if sqlite3.OperationalError then dont create
+    except OperationalError:
+        pass
     c.execute("INSERT INTO words VALUES ('go', 'идти')")
 
     conn.commit()
     conn.close()
 
-
-    update.message.reply_text('Hi!')
+    update.message.reply_text('done!')
 
 
 def help(update, context):
