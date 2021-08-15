@@ -19,7 +19,10 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from os import environ
+from dotenv import load_dotenv
 
+
+load_dotenv()  # take environment variables from .env.
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
