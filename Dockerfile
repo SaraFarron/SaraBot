@@ -2,15 +2,14 @@ FROM python:3.9
 
 WORKDIR /home
 
-RUN apt-get update && apt-get install sqlite3 && \
+RUN apt-get update && \
     pip install --upgrade pip
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
+COPY db ./
 COPY .env ./
-COPY bot.py ./
-COPY *.sqlite ./
-RUN sqlite3 dictionary.db < create.db
+COPY *.py ./
 
 ENTRYPOINT ["python", "bot.py"]

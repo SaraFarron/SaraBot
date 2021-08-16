@@ -19,5 +19,5 @@ docker
 
 + add/edit/delete words to/in/from db
 + upload xlsx/gsheets file with words to fill db
-+ learn: algorytm to learn a pack of words
++ learn: algorithm to learn a pack of words
 + notifications to learn new words every day
