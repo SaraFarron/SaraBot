@@ -9,7 +9,7 @@ from sqlite3 import OperationalError
 from word import Word
 
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
