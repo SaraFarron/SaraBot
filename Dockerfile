@@ -1,15 +1,8 @@
 FROM python:3.9
 
-WORKDIR /home
+RUN pip install --upgrade pip
 
-RUN apt-get update && \
-    pip install --upgrade pip
-
-COPY requirements.txt ./
+COPY . ./
 RUN pip install -r requirements.txt
-
-COPY db ./
-COPY .env ./
-COPY *.py ./
 
 ENTRYPOINT ["python", "bot.py"]
