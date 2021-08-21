@@ -1,13 +1,17 @@
 import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import (
+    Updater, CommandHandler,
+    MessageHandler, Filters,
+    ConversationHandler, RegexHandler)
 from os import environ
 from dotenv import load_dotenv
 from logic import (
-    start, show_db, add_word,
-    delete_word, edit_word,
-    get_word, echo, error
-                   )
-
+    start, start_buttons,
+    learn, learned_words,
+    new_dictionary, update_dictionary,
+    delete_dictionary, get_dictionary,
+    get_dictionary_name,
+    error)
 
 load_dotenv()
 
@@ -17,21 +21,66 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-SEARCH_FOR_WORD, GET_NEW_WORD = range(2)
+MENU, LEARN, LEARNED_WORDS, \
+NEW_DICTIONARY, UPDATE_DICTIONARY, DEL_DICTIONARY, \
+GET_DICTIONARY, ADD_WORDS = range(8)
 
 
 def main():
     updater = Updater(environ.get('BOT_TOKEN'), use_context=True)
     dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("showdb", show_db))
-    dp.add_handler(CommandHandler("add", add_word))
-    dp.add_handler(CommandHandler("delete", delete_word))
-    dp.add_handler(CommandHandler("update", edit_word))
-    dp.add_handler(CommandHandler("get", get_word))
+    conv_handler = ConversationHandler(
+        entry_points=[ConversationHandler('start', start)],
+        states={
+            MENU: [RegexHandler(
+                '^(learn new words)$',
+                learn,
+                pass_user_data=True),
+                RegexHandler(
+                    '^(show learned words)$',
+                    learned_words,
+                    pass_user_data=True),
+                RegexHandler(
+                    '^(create new dictionary)$',
+                    get_dictionary_name,
+                    pass_user_data=True),
+                RegexHandler(
+                    '^(update dictionary)$',
+                    update_dictionary,
+                    pass_user_data=True),
+                RegexHandler(
+                    '^(delete dictionary)$',
+                    delete_dictionary,
+                    pass_user_data=True),
+                RegexHandler(
+                    '^(show dictionary)$',
+                    get_dictionary,
+                    pass_user_data=True),
+            ],
+            LEARN: [],
+            NEW_DICTIONARY: [MessageHandler(Filters.text,
+                                            new_dictionary,
+                                            pass_user_data=True)
+                             ],
+            UPDATE_DICTIONARY: [ConversationHandler()
+                                ],
+            DEL_DICTIONARY: [MessageHandler(Filters.text,
+                                            delete_dictionary,
+                                            pass_user_data=True)
+                             ],
+            GET_DICTIONARY: [MessageHandler(Filters.text,
+                                            get_dictionary,
+                                            pass_user_data=True)
+                             ],
+            ADD_WORDS: [],
 
-    dp.add_handler(MessageHandler(Filters.text, echo))
+        }
+    )
+
+    dp.add_handler(conv_handler)
+
+    # dp.add_handler(MessageHandler(Filters.text, echo))
 
     dp.add_error_handler(error)
     updater.start_polling()

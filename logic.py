@@ -5,15 +5,19 @@ from sqlite3 import OperationalError
 from word import Word
 import logging
 
-
 load_dotenv()
 logger = logging.getLogger(__name__)
+
+MENU, LEARN, LEARNED_WORDS, \
+NEW_DICTIONARY, UPDATE_DICTIONARY, DEL_DICTIONARY, \
+GET_DICTIONARY, ADD_WORDS = range(8)
 
 
 class dbopen(object):
     """
     Simple Context Manager for sqlite3 databases. Commits everything at exit.
     """
+
     def __init__(self, path):
         self.path = path
 
@@ -27,11 +31,65 @@ class dbopen(object):
         self.conn.close()
 
 
-def upload_file(update, context):
+def start(update, _):
+    reply_keyboard = [
+        [
+            'learn new words',
+            'show learned words',
+            'create new dictionary',
+            'update dictionary',
+            'delete dictionary',
+            'show dictionary',
+        ]
+    ]
+
+    markup_key = ReplyKeyboardMarkup(reply_keyboard, True)
+    update.message.reply_text(
+        'Hello! I am helping people to improve their vocabulary in english.'
+        '/cancel <- command to undo current conversation. Works anytime!',
+        reply_markup=markup_key)
+
+    return MENU
+
+
+def start_buttons(update, _):
     pass
 
 
-def add_word(update, context):
+def learn(update, _):
+    pass
+
+
+def learned_words(update, _):
+    with dbopen('words.db') as c:
+        c.execute("SELECT * FROM learned_words")
+        update.message.reply_text(c.fetchall())
+
+    return MENU
+
+
+def get_dictionary_name(update, _):
+    update.message.reply_text('Enter dictionary name')
+    return NEW_DICTIONARY
+
+
+def new_dictionary(update, _):
+    name = update.message.text
+    with dbopen('words.db') as c:
+        try:
+            c.execute("""CREATE TABLE :name (
+                russian text,
+                english text
+            )""", {'name': name})
+        except OperationalError:
+            update.message.reply_text('Dictionary names must be unique')
+            return MENU
+
+    update.message.reply_text('Done!')
+    return ADD_WORDS
+
+
+def add_words(update, context):  # TODO fix
     russian = context.args[0]
     english = context.args[1]
     with dbopen('words.db') as c:
@@ -44,56 +102,63 @@ def add_word(update, context):
             update.message.reply_text('Done!')
 
 
-def learn(update, context):
+def update_dictionary(update, _):
     pass
 
 
-def delete_word(update, context):
+def delete_dictionary(update, _):  # TODO add confirmation
+    name = update.message.text
     with dbopen('words.db') as c:
-        c.execute("DELETE FROM words WHERE english = :pattern OR russian = :pattern",
-                  {'pattern': context.args[0]})
-            # update.message.reply_text("No such word")
-    update.message.reply_text("Deleted")
+        c.execute("DROP TABLE :name", {'name': name})
+        update.message.reply_text('Done!')
+
+    return MENU
 
 
-def edit_word(update, context):  # TODO create conversation instead of command
+def get_dictionary(update, _):
+    name = update.message.text
     with dbopen('words.db') as c:
-        c.execute("""UPDATE words SET russian=:russian
-                    WHERE english=:english""",
-                  {'russian': context.args[0], 'english': context.args[1]})
-            # update.message.reply_text("No such word")
-    update.message.reply_text("Updated")
-
-
-def show_db(update, context):
-    with dbopen('words.db') as c:
-        c.execute("SELECT * FROM words")
+        c.execute("SELECT * FROM :name", {'name': name})
         update.message.reply_text(c.fetchall())
 
-
-def start(update, context):
-    with dbopen('words.db') as c:
-        try:
-            c.execute("""CREATE TABLE words (
-                russian text,
-                english text
-            )""")
-        except OperationalError:
-            pass
-        c.execute("INSERT INTO words VALUES ('идти', 'go')")
-    update.message.reply_text('Done!')
-
-
-def get_word(update, context):
-    with dbopen('words.db') as c:
-        c.execute("SELECT * FROM words WHERE english=:pattern OR russian=:pattern",
-                  {'pattern': context.args[0]})
-        update.message.reply_text(c.fetchall())
-
-
-def echo(update, context):
-    update.message.reply_text(update.message.text)
+    return MENU
 
 
 def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+
+# def delete_word(update, context):
+#     with dbopen('words.db') as c:
+#         c.execute("DELETE FROM words WHERE english = :pattern OR russian = :pattern",
+#                   {'pattern': context.args[0]})
+#             # update.message.reply_text("No such word")
+#     update.message.reply_text("Deleted")
+#
+#
+# def edit_word(update, context):  # TODO create conversation instead of command
+#     with dbopen('words.db') as c:
+#         c.execute("""UPDATE words SET russian=:russian
+#                     WHERE english=:english""",
+#                   {'russian': context.args[0], 'english': context.args[1]})
+#             # update.message.reply_text("No such word")
+#     update.message.reply_text("Updated")
+#
+#
+# def show_db(update, context):
+#     with dbopen('words.db') as c:
+#         c.execute("SELECT * FROM words")
+#         update.message.reply_text(c.fetchall())
+#
+#
+# def get_word(update, context):
+#     with dbopen('words.db') as c:
+#         c.execute("SELECT * FROM words WHERE english=:pattern OR russian=:pattern",
+#                   {'pattern': context.args[0]})
+#         update.message.reply_text(c.fetchall())
+#
+#
+# def echo(update, context):
+#     update.message.reply_text(update.message.text)
+#
+#

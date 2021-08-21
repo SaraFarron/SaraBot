@@ -43,3 +43,5 @@ funcs:
     add words:
         send file
         add word (/add [russian] [english]) -> add words
+    cancel:
+        (returns user to last stage of conversation, accessible anywhere)
