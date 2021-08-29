@@ -1,9 +1,0 @@
-version: "3.7"
-
-services:
-  main:
-    build: .
-    volumes:
-      - .:/usr/src/sara-bot
-    env_file:
-      - .env
