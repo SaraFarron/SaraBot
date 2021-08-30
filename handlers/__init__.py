@@ -1,2 +1,2 @@
 from . import dictionary, learning
-from main import bot, dp
+from app import bot, dp

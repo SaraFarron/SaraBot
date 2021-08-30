@@ -3,20 +3,9 @@ from aiogram.types import (
 )
 
 
-menu = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text='create new dictionary'),
-            KeyboardButton(text='update dictionary'),
-        ],
-        [
-            KeyboardButton(text='delete dictionary'),
-            KeyboardButton(text='show dictionary'),
-        ],
-        [
-            KeyboardButton(text='show learned words'),
-            KeyboardButton(text='learn new words'),
-        ],
-    ],
-    resize_keyboard=True
-)
+all_dictionaries = []  # TODO get all dictionaries from db
+keyboard = [[KeyboardButton(text=name)] for name in all_dictionaries]
+all_dictionaries_keyboard = ReplyKeyboardMarkup(
+    keyboard=keyboard,
+    resize_keyboard=True,
+    row_width=2)
