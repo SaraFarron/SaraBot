@@ -23,20 +23,20 @@ docker
 start -> start buttons:
     learn new words -> select dictionary -> learning algorithm
     create new dictionary:
-        dictionary name -> add words                   
+        dictionary name -> add words.                   
     edit dictionary -> select dictionary -> buttons:
-        add words
-        update word -> search for word -> send updated version -> edit dictionary
+        add words.
+        update word -> search for word -> send updated version -> edit dictionary.
     delete dictionary:
-        select dictionary -> confirm -> start buttons 
+        select dictionary -> confirm -> start buttons. 
     show dictionary:
-        select dictionary -> (show) -> start buttons
+        select dictionary -> (show) -> start buttons.
     show learned words:
-        (show) -> start buttons
+        (show) -> start buttons.
 
 funcs:
     add words:
-        send file
-        add word (/add [russian] [english]) -> add words
+        send file.
+        add word (/add [russian] [english]) -> add words.
     cancel:
-        (returns user to last stage of conversation, accessible anywhere)
+        (returns user to menu, accessible anywhere)
