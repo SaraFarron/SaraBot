@@ -19,7 +19,6 @@ async def show_menu(message: Message):
 # Add words
 @dp.callback_query_handler(text='add_word')
 async def add_word(message: Message):
-
     logger.info(f'{message.from_user.username} is adding new words')
     await message.answer('Please choose dictionary at which words will be added:',
                          reply_markup=inline.all_dictionaries_keyboard)  # TODO error
@@ -28,7 +27,6 @@ async def add_word(message: Message):
 
 @dp.message_handler(state=AddWords.get_dictionary)
 async def get_dictionary(message: Message, state: FSMContext):
-
     dictionary_name = message.text
     # TODO search in db for dictionary_name
     async with state.proxy() as data:
@@ -39,7 +37,6 @@ async def get_dictionary(message: Message, state: FSMContext):
 
 @dp.message_handler(state=AddWords.get_translation_pair)
 async def get_translation_pair(message: Message, state: FSMContext):
-
     pair = message.text.split(' ')
     # TODO put pair in db
     state_data = state.get_data()
@@ -50,7 +47,6 @@ async def get_translation_pair(message: Message, state: FSMContext):
 # Create new dictionary
 @dp.callback_query_handler(text="create_dictionary")
 async def create_dictionary(message: Message, call: CallbackQuery):
-
     await call.answer(cache_time=60)  # seconds
     callback_data = call.data
     logger.info(f'call = {callback_data} to create new dictionary from  {call.from_user.username}')
@@ -71,6 +67,7 @@ async def get_dictionary_name(message: Message, state: FSMContext):
 async def add_words(message: Message, call: CallbackQuery, state: FSMContext):
     await call.answer(cache_time=30)
     callback_data = call.data
+
     if callback_data == 'yes':
         await AddWords.get_translation_pair.set()  # TODO send dictionary name
     else:
@@ -80,18 +77,39 @@ async def add_words(message: Message, call: CallbackQuery, state: FSMContext):
 
 # Update dictionary
 @dp.callback_query_handler(text='update_dictionary')
-async def update_dictionary(message: Message):
-    pass
+async def update_dictionary(message: Message, call: CallbackQuery):
+    await call.answer(cache_time=60)  # seconds
+    callback_data = call.data
+    logger.info(f'call = {callback_data} to update dictionary from  {call.from_user.username}')
+    await message.answer('Select dictionary to update', reply_markup=inline.all_dictionaries_keyboard)
+    await UpdateDictionary.get_dictionary.set()
 
 
-@dp.callback_query_handler()
-async def get_translation_to_update(message: Message, state: FSMContext):
-    pass
+@dp.callback_query_handler(state=UpdateDictionary.get_translation_to_update)
+async def get_translation_to_update(message: Message, call: CallbackQuery):
+    await call.answer(cache_time=60)
+    callback_data = call.data
+    # TODO check if dictionary exists in db
+    await message.answer(
+        'Send an old word and new version of word that you want to update like this:\n old-word new-word')
+    await UpdateDictionary.next()
 
 
-@dp.message_handler()
-async def confirm(message: Message):
-    pass
+@dp.message_handler(state=UpdateDictionary.confirm)
+async def confirm(message: Message, state: FSMContext, call: CallbackQuery):
+    # TODO search for word and if exists continue, otherwise go to previous state
+    old_word = 'old'
+    new_word = 'new'
+
+    await message.answer(f'You are changing {old_word} to {new_word}, proceed?', reply_markup=inline.yes_no)
+    await call.answer(cache_time=30)
+    callback_data = call.data
+    if callback_data == 'yes':
+        await state.finish()  # TODO update dictionary
+        await message.answer('Dictionary updated!')
+    else:
+        await message.answer('Canceled')
+        await state.finish()
 
 
 # Delete dictionary
