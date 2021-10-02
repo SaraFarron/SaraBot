@@ -1,8 +1,12 @@
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher.filters import Command, Text
 
-from app import bot, dp
-from app import logger
+from main import bot, dp
+from main import logger
+
+from db import (
+    create_table, add_row, update_row,
+    delete_row, get_data, is_table)
 
 
 @dp.message_handler()
