@@ -1,4 +1,5 @@
 from aiogram.types import Message, CallbackQuery
+from aiogram import Dispatcher
 from aiogram.dispatcher.filters import Command, Text
 
 from main import bot, dp
@@ -12,3 +13,7 @@ from db import (
 @dp.message_handler()
 async def echo(message: Message):
     await message.answer(message.text)
+
+
+def setup(dp: Dispatcher):
+    dp.register_message_handler(echo)
