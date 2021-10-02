@@ -1,10 +1,10 @@
 FROM python:3.9
 
-WORKDIR /home/SaraBot
+WORKDIR /home/sarabot
 
-COPY requirements.txt .
 RUN pip install --upgrade pip
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY . .
 
-ENTRYPOINT ["python", "app.py"]
+COPY .env .
+COPY *.py ./
