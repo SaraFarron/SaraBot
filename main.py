@@ -18,6 +18,5 @@ dp = Dispatcher(bot, loop=loop, storage=MemoryStorage())
 
 
 if __name__ == '__main__':
-    from handlers import dp, echo
-    echo.setup(dp)
+    from handlers import dp
     executor.start_polling(dp)
