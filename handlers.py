@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters import Command, Text
 from main import dp
 from main import logger
 
-from keyboards import menu
+from keyboards import menu, yes_no_answer
 
 from states import (AddWords, UpdateDictionary,
                     DeleteDictionary, CreateDictionary)
@@ -82,7 +82,7 @@ async def get_dictionary_name(message: Message, state: FSMContext):
     async with state.proxy() as data:
         data['dictionary name'] = dictionary_name
 
-    await message.answer('Do you want add words to new dictionary right now?')  # TODO reply with keyboard
+    await message.answer('Do you want add words to new dictionary right now?', reply_markup=yes_no_answer)
     await CreateDictionary.next()
 
 
@@ -93,7 +93,12 @@ async def add_words(message: Message, call: CallbackQuery, state: FSMContext):
     callback_data = call.data
 
     if callback_data == 'yes':
+
+        async with state.proxy() as data:
+            data['dictionary name'] = callback_data  # Wasn't tested
+
         await AddWords.get_translation_pair.set()  # TODO send dictionary name
+
     else:
         await message.answer('New dictionary has been created!')
         await state.finish()
