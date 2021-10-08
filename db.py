@@ -110,3 +110,12 @@ def is_table(table_name: str):
     if table_name in tables:
         return True
     return False
+
+
+def get_all_tables():
+    """Get all tables from db"""
+
+    command = f"SELECT * FROM pg_catalog.pg_tables WHERE schemaname = 'public';"
+    tables = [x[1] for x in execute_sql(command)]
+
+    return tables

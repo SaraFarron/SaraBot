@@ -1,6 +1,7 @@
 from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
 )
+from db import get_all_tables
 
 
 def add_inline_buttons(buttons: dict[str: str], keyboard: InlineKeyboardMarkup):
@@ -27,3 +28,14 @@ yes_no_buttons = {
 }
 yes_no_answer = InlineKeyboardMarkup()
 yes_no_answer = add_inline_buttons(yes_no_buttons, yes_no_answer)
+
+
+def all_dictionaries_keyboard():
+    """Return a keyboard with all dictionaries as buttons"""
+
+    dictionaries = get_all_tables()
+    dictionaries = {d: d for d in dictionaries}
+    keyboard = InlineKeyboardMarkup()
+    keyboard = add_inline_buttons(dictionaries, keyboard)
+
+    return keyboard

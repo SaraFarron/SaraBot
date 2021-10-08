@@ -1,11 +1,12 @@
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command, Text
+from aiogram.dispatcher.filters import Command
 
 from main import dp
 from main import logger
 
-from keyboards import menu, yes_no_answer
+from keyboards import (menu, yes_no_answer, add_inline_buttons,
+                       all_dictionaries_keyboard)
 
 from states import (AddWords, UpdateDictionary,
                     DeleteDictionary, CreateDictionary)
@@ -29,9 +30,10 @@ async def send_menu(message: Message):
 async def add_word(message: Message):
 
     logger.info(f'{message.from_user.username} is adding new words')
+    keyboard = all_dictionaries_keyboard()
 
     await message.answer('Please choose dictionary at which words will be added:',
-                         )  # TODO reply with keyboard
+                         reply_markup=keyboard)  # TODO reply with keyboard
     await AddWords.get_dictionary.set()  # more readable then await AddWords.first()
 
 
@@ -110,10 +112,11 @@ async def update_dictionary(message: Message, call: CallbackQuery):
 
     await call.answer(cache_time=60)  # seconds
     callback_data = call.data
+    keyboard = all_dictionaries_keyboard()
 
     logger.info(f'call = {callback_data} to update dictionary from  {call.from_user.username}')
 
-    await message.answer('Select dictionary to update')  # TODO reply with keyboard
+    await message.answer('Select dictionary to update', reply_markup=keyboard)  # TODO reply with keyboard
     await UpdateDictionary.get_dictionary.set()
 
 
@@ -128,7 +131,7 @@ async def get_translation_to_update(message: Message, call: CallbackQuery, state
         await state.finish()
 
     await message.answer(
-        'Send an old word and new version of word that you want to update like this:\n old-word new-word')
+        'Send an old word and new version of word that you want to update like this:\n old word_new word')
     await UpdateDictionary.next()
 
 
@@ -136,18 +139,26 @@ async def get_translation_to_update(message: Message, call: CallbackQuery, state
 async def confirm(message: Message, state: FSMContext, call: CallbackQuery):
 
     # TODO search for word and if exists continue, otherwise go to previous state
-    old_word = 'old'
-    new_word = 'new'
+    old_word, new_word = message.text.split('_')
+    old_pair = get_data(message.from_user.username, old_word)
 
-    await message.answer(f'You are changing {old_word} to {new_word}, proceed?')  # TODO reply with keyboard
-    await call.answer(cache_time=30)
-    callback_data = call.data
+    if not old_pair:
+        await message.answer('No such word found in dictionary')
+        await UpdateDictionary.previous()
 
-    if callback_data == 'yes':
-        await state.finish()  # TODO update dictionary
-        await message.answer('Dictionary updated!')
     else:
-        await message.answer('Canceled')
+        await message.answer(f'You are changing {old_word} to {new_word}, proceed?', reply_markup=yes_no_answer)
+        await call.answer(cache_time=30)
+        callback_data = call.data
+
+        if callback_data == 'yes':
+            new_pair = ''  # TODO
+            # update_row(callback_data, )
+            await state.finish()  # TODO update dictionary
+            await message.answer('Dictionary updated!')
+        else:
+            await message.answer('Canceled')
+
         await state.finish()
 
 
