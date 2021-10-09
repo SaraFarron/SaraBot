@@ -14,6 +14,7 @@ def add_inline_buttons(buttons: dict[str: str], keyboard: InlineKeyboardMarkup):
 
 
 menu_buttons = {
+    'Add new word': 'add word',
     'Add Dictionary': 'add dict',
     'Show all dictionaries': 'show dicts',
     'Update Dictionary': 'update dict',

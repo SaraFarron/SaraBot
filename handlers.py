@@ -5,8 +5,7 @@ from aiogram.dispatcher.filters import Command
 from main import dp
 from main import logger
 
-from keyboards import (menu, yes_no_answer, add_inline_buttons,
-                       all_dictionaries_keyboard)
+from keyboards import (menu, yes_no_answer, all_dictionaries_keyboard)
 
 from states import (AddWords, UpdateDictionary,
                     DeleteDictionary, CreateDictionary)
@@ -26,23 +25,23 @@ async def send_menu(message: Message):
 
 
 # Add words
-@dp.callback_query_handler(text='add_word')
+@dp.callback_query_handler(text='add word')
 async def add_word(message: Message):
 
     logger.info(f'{message.from_user.username} is adding new words')
     keyboard = all_dictionaries_keyboard()
 
     await message.answer('Please choose dictionary at which words will be added:',
-                         reply_markup=keyboard)  # TODO reply with keyboard
+                         reply_markup=keyboard)
     await AddWords.get_dictionary.set()  # more readable then await AddWords.first()
 
 
-@dp.message_handler(state=AddWords.get_dictionary)
-async def get_dictionary(message: Message, state: FSMContext):
+@dp.callback_query_handler(state=AddWords.get_dictionary)
+async def get_dictionary(message: Message, state: FSMContext, call: CallbackQuery):
 
-    dictionary_name = message.text
+    dictionary_name = call.data
 
-    if not is_table(dictionary_name):  # TODO test this
+    if not is_table(dictionary_name):  # TODO might not be necessary
         await message.answer('No such dictionary')
         await state.finish()
 
@@ -107,7 +106,7 @@ async def add_words(message: Message, call: CallbackQuery, state: FSMContext):
 
 
 # Update dictionary
-@dp.callback_query_handler(text='update_dictionary')
+@dp.callback_query_handler(text='update dict')
 async def update_dictionary(message: Message, call: CallbackQuery):
 
     await call.answer(cache_time=60)  # seconds
@@ -116,7 +115,7 @@ async def update_dictionary(message: Message, call: CallbackQuery):
 
     logger.info(f'call = {callback_data} to update dictionary from  {call.from_user.username}')
 
-    await message.answer('Select dictionary to update', reply_markup=keyboard)  # TODO reply with keyboard
+    await message.answer('Select dictionary to update', reply_markup=keyboard)
     await UpdateDictionary.get_dictionary.set()
 
 
