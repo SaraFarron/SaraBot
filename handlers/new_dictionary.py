@@ -1,5 +1,5 @@
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 
 from keyboards import yes_no_answer
 from . import dp
@@ -7,14 +7,14 @@ from states import AddWords, CreateDictionary
 
 
 @dp.message_handler(state=CreateDictionary.get_dictionary_name)
-@dp.message_handler(text="Add Dictionary'")
+@dp.message_handler(text="Add Dictionary")
 async def create_dictionary(message: Message):
 
-    await message.answer('How new dictionary will be named?')
-    await CreateDictionary.get_dictionary_name.set()
+    await message.answer('How new dictionary will be named?', reply_markup=ReplyKeyboardRemove())
+    await CreateDictionary.add_words.set()
 
 
-@dp.message_handler(state=CreateDictionary.add_words)
+@dp.message_handler(state=CreateDictionary.add_words)  # typeerror with call
 async def get_dictionary_name(message: Message, state: FSMContext, call: CallbackQuery):
     dictionary_name = message.text
     async with state.proxy() as data:
