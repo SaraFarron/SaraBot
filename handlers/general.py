@@ -12,9 +12,8 @@ from . import logger
 @dp.message_handler(state='*', commands=['cancel'])
 @dp.message_handler(lambda message: message.text.lower() == 'cancel', state='*')
 async def cancel_handler(message: Message, state: FSMContext, raw_state: Optional[str] = None):
-    """
-    Allow user to cancel any action
-    """
+    """Allow user to cancel any action"""
+
     if raw_state is None:
         return
 
