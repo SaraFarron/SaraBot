@@ -4,12 +4,13 @@ from aiogram import Bot, Dispatcher, executor
 from logging import basicConfig, getLogger, INFO
 from os import environ
 import asyncio
+from dotenv import load_dotenv
 
 
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             level=INFO)
 logger = getLogger(__name__)
-
+load_dotenv()
 loop = asyncio.get_event_loop()
 bot = Bot(environ.get('BOT_TOKEN'), parse_mode='HTML')
 dp = Dispatcher(bot, loop=loop, storage=MemoryStorage())

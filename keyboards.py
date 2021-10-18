@@ -1,5 +1,5 @@
 from aiogram.types import (
-    InlineKeyboardMarkup, InlineKeyboardButton,
+    InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup,
 )
 from db import get_all_tables
 
@@ -13,15 +13,24 @@ def add_inline_buttons(buttons: dict[str: str], keyboard: InlineKeyboardMarkup):
     return keyboard
 
 
+def add_reply_buttons(buttons: dict[str: str], keyboard: ReplyKeyboardMarkup):
+    """Return inline keyboard with buttons added"""
+
+    for button_name in buttons.keys():
+        keyboard.add(button_name)
+
+    return keyboard
+
+
 menu_buttons = {
-    'Add new word': 'add word',
+    'Add New Word': 'add word',
     'Add Dictionary': 'add dict',
-    'Show all dictionaries': 'show dicts',
+    'Show All Dictionaries': 'show dicts',
     'Update Dictionary': 'update dict',
     'Delete Dictionary': 'delete dict'
 }
-menu = InlineKeyboardMarkup(row_width=2)
-menu = add_inline_buttons(menu_buttons, menu)
+menu = ReplyKeyboardMarkup()
+menu = add_reply_buttons(menu_buttons, menu)
 
 yes_no_buttons = {
     'Yes': 'yes',
