@@ -44,6 +44,13 @@ def create_table(table_name: str, fields: dict[str: Union[str, int, float, bool,
     execute_sql(command)
 
 
+def delete_table(table_name: str):
+    """Delete table from db"""
+
+    command = f"""DROP TABLE "{table_name}";"""
+    execute_sql(command)
+
+
 def add_row(table_name: str, row: dict[str: Union[str, int, float, bool, dict], ]):
     """Add new row"""
 

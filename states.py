@@ -22,3 +22,4 @@ class UpdateDictionary(StatesGroup):
 class DeleteDictionary(StatesGroup):
     get_dictionary = State()
     confirm = State()
+    delete = State()
