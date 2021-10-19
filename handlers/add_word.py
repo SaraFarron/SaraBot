@@ -37,7 +37,7 @@ async def create_new_dictionary(message: Message, state: FSMContext):
         await state.finish()
 
 
-@dp.callback_query_handler(text='Test', state=AddWords.get_dictionary)
+@dp.callback_query_handler(text=get_all_tables(), state=AddWords.get_dictionary)
 async def get_dictionary(call: CallbackQuery, state: FSMContext):
 
     dictionary_name = call.data
@@ -53,7 +53,7 @@ async def get_translation_pair(message: Message, state: FSMContext):
 
     pair = message.text.split(' ')
     data = await state.get_data()
-    add_row(data.get('dictionary name'), {'Russian': pair[0], 'English': pair[1]})  # TODO test this
+    add_row(data.get('dictionary name'), {'Russian': pair[0], 'English': pair[1]})
 
     await message.answer(f'Translation for {pair[1]} added to {data.get("dictionary name")}')
     await state.finish()
