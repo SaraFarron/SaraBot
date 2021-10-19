@@ -17,6 +17,7 @@ async def add_word(message: Message):
     if keyboard:
         await message.reply('Please choose dictionary at which words will be added:',
                             reply_markup=keyboard)
+        await AddWords.get_dictionary.set()
 
     else:
         await message.reply("You don't have any dictionaries yet, do you want to create one?",
@@ -36,14 +37,14 @@ async def create_new_dictionary(message: Message, state: FSMContext):
         await state.finish()
 
 
-@dp.callback_query_handler(lambda c: c.data in get_all_tables())
-async def get_dictionary(message: Message, state: FSMContext, call: CallbackQuery):
+@dp.callback_query_handler(text='Test', state=AddWords.get_dictionary)
+async def get_dictionary(call: CallbackQuery, state: FSMContext):
 
     dictionary_name = call.data
     async with state.proxy() as data:
         data['dictionary name'] = dictionary_name
 
-    await message.answer('Provide a pair of words in this format:\n русский english')
+    await call.message.answer('Provide a pair of words in this format:\n русский english')
     await AddWords.next()
 
 
@@ -51,8 +52,8 @@ async def get_dictionary(message: Message, state: FSMContext, call: CallbackQuer
 async def get_translation_pair(message: Message, state: FSMContext):
 
     pair = message.text.split(' ')
-    data = state.get_data()
-    add_row(data.get('dictionary name'), {pair[0]: pair[1]})  # TODO test this
+    data = await state.get_data()
+    add_row(data.get('dictionary name'), {'Russian': pair[0], 'English': pair[1]})  # TODO test this
 
-    await message.answer(f'translation for {pair[1]} added to {data.get("dictionary name")}')
+    await message.answer(f'Translation for {pair[1]} added to {data.get("dictionary name")}')
     await state.finish()
