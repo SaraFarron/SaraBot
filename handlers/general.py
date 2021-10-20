@@ -14,6 +14,8 @@ from . import logger
 async def cancel_handler(message: Message, state: FSMContext, raw_state: Optional[str] = None):
     """Allow user to cancel any action"""
 
+    logger.info('Canceled stage')
+
     if raw_state is None:
         return
 
@@ -30,3 +32,13 @@ async def send_menu(message: Message):
     logger.info(f'sent menu to {message.from_user.username}')
 
     await message.answer("Please choose an action", reply_markup=menu)
+
+
+@dp.message_handler(state='*', commands=['help'])
+@dp.message_handler(lambda message: message.text.lower() == 'help', state='*')
+async def help_command(message: Message):
+
+    logger.info('Sent help')
+    await message.answer(f"To get menu with all actions you can do type /menu\n"
+                         f"You can cancel any action type /cancel command\n"
+                         f"This menu is called via /help command.")

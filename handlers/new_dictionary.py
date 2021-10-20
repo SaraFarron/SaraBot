@@ -1,7 +1,7 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 
-from . import dp
+from . import dp, logger
 from db import create_table, is_table
 from states import CreateDictionary
 
@@ -10,6 +10,7 @@ from states import CreateDictionary
 @dp.message_handler(text="Add Dictionary")
 async def create_dictionary(message: Message):
 
+    logger.info('Entered new dictionary stage')
     await message.answer('How new dictionary will be named?', reply_markup=ReplyKeyboardRemove())
     await CreateDictionary.add_words.set()
 

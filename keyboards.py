@@ -32,12 +32,12 @@ menu_buttons = [
 menu = ReplyKeyboardMarkup()
 menu = add_reply_buttons(menu_buttons, menu)
 
-yes_no_buttons = [
-    'Yes',
-    'No'
-]
-yes_no_answer = ReplyKeyboardMarkup()
-yes_no_answer = add_reply_buttons(yes_no_buttons, yes_no_answer)
+yes_no_buttons = {
+    'Yes': 'yes',
+    'No': 'no'
+}
+yes_no_answer = InlineKeyboardMarkup()
+yes_no_answer = add_inline_buttons(yes_no_buttons, yes_no_answer)
 
 
 def all_dictionaries_keyboard():
