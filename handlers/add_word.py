@@ -37,7 +37,7 @@ async def create_new_dictionary(message: Message, state: FSMContext):
         await state.finish()
 
 
-@dp.callback_query_handler(text=get_all_tables(), state=AddWords.get_dictionary)
+@dp.callback_query_handler(state=AddWords.get_dictionary)
 async def get_dictionary(call: CallbackQuery, state: FSMContext):
 
     dictionary_name = call.data
