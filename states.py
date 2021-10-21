@@ -14,9 +14,8 @@ class CreateDictionary(StatesGroup):
 
 
 class UpdateDictionary(StatesGroup):
-    get_dictionary = State()
     get_translation_to_update = State()
-    confirm = State()
+    update = State()
 
 
 class DeleteDictionary(StatesGroup):

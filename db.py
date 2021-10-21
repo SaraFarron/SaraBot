@@ -78,11 +78,11 @@ def add_row(table_name: str, row: dict[str: Union[str, int, float, bool, dict], 
 def update_row(table_name: str,
                old_value: dict[str: Union[str, int, float, bool, dict]],
                new_value: dict[str: Union[str, int, float, bool, dict]]):
-    """Change value in table"""
+    """Change value in table. The dictionary's keys are fields and values are values in table rows"""
 
     command = f"""UPDATE "{table_name}"
-                SET {list(old_value.keys())[0]} = {list(new_value.values())[0]}
-                WHERE {list(new_value.keys())[0]} = {list(old_value.values())[0]}
+                SET {list(old_value.keys())[0]} = '{list(new_value.values())[0]}'
+                WHERE {list(new_value.keys())[0]} = '{list(old_value.values())[0]}'
                 ;"""
 
     execute_sql(command)
@@ -102,7 +102,7 @@ def get_data(table_name: str, field='*'):
     """Get data from table. Leave field blank to get all rows"""
 
     if not is_table(table_name):
-        return "Table doesn't exist"
+        raise Exception('No such table')
 
     command = f"""
     SELECT {field} FROM "{table_name}"
@@ -112,7 +112,7 @@ def get_data(table_name: str, field='*'):
 
 
 def is_table(table_name: str):
-    """Check if table exists"""
+    """Return True if table exists"""
 
     command = f"SELECT * FROM pg_catalog.pg_tables WHERE schemaname = 'public';"
     tables = [x[1] for x in execute_sql(command)]
