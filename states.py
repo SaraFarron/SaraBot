@@ -4,8 +4,14 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 class AddWords(StatesGroup):
     choose_dictionary = State()
     create_new = State()
-    get_dictionary = State()  # todo make get_dictionary a reusable state
+    get_dictionary = State()
     get_translation_pair = State()
+
+
+class DeleteWord(StatesGroup):
+    choose_pair = State()
+    confirm = State()
+    delete = State()
 
 
 class CreateDictionary(StatesGroup):

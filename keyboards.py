@@ -1,7 +1,7 @@
 from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup,
 )
-from db import get_all_tables
+from db import get_all_tables, get_data
 
 
 def add_inline_buttons(buttons: dict[str: str], keyboard: InlineKeyboardMarkup):
@@ -24,6 +24,7 @@ def add_reply_buttons(buttons: list[str, ], keyboard: ReplyKeyboardMarkup):
 
 menu_buttons = [
     'Add New Word',
+    'Delete Word',
     'Add Dictionary',
     'Show All Dictionaries',
     'Update Dictionary',
@@ -54,3 +55,12 @@ def all_dictionaries_keyboard():
     keyboard = add_inline_buttons(dictionaries, keyboard)
 
     return keyboard
+
+
+def all_words_keyboard(dictionary_name):
+    """Return a keyboard with all words from dictionary"""
+
+    words = get_data(dictionary_name, field='russian')
+    words = {w: w for w in words}
+    keyboard = InlineKeyboardMarkup()
+    return add_inline_buttons(words, keyboard)
