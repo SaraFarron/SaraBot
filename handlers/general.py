@@ -11,18 +11,15 @@ from . import logger
 
 @dp.message_handler(state='*', commands=['cancel'])
 @dp.message_handler(lambda message: message.text.lower() == 'cancel', state='*')
-async def cancel_handler(message: Message, state: FSMContext, raw_state: Optional[str] = None):
+async def cancel_handler(message: Message, state: FSMContext):
     """Allow user to cancel any action"""
 
     logger.info('Canceled stage')
 
-    if raw_state is None:
-        return
-
     # Cancel state and inform user about it
     await state.finish()
     # And remove keyboard (just in case)
-    await message.reply('Canceled.', reply_markup=ReplyKeyboardRemove())
+    await message.answer('Canceled.', reply_markup=ReplyKeyboardRemove())
 
 
 @dp.message_handler(Command('menu'))

@@ -92,7 +92,7 @@ def delete_row(table_name: str, field_name: str, field_value: Union[str, int, fl
     """Delete row from table"""
 
     command = f"""DELETE FROM "{table_name}"
-                    WHERE {field_name} = {field_value}
+                    WHERE {field_name} = '{field_value}'
                     ;"""
 
     execute_sql(command)

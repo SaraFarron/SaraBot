@@ -61,6 +61,6 @@ def all_words_keyboard(dictionary_name):
     """Return a keyboard with all words from dictionary"""
 
     words = get_data(dictionary_name, field='russian')
-    words = {w: w for w in words}
+    words = {w[0]: w[0] for w in words}
     keyboard = InlineKeyboardMarkup()
     return add_inline_buttons(words, keyboard)
