@@ -37,5 +37,6 @@ async def help_command(message: Message):
 
     logger.info('Sent help')
     await message.answer(f"To get menu with all actions you can do type /menu\n"
+                         f"If you want to upload a file with many words from google translator just send a file\n"
                          f"You can cancel any action type /cancel command\n"
                          f"This menu is called via /help command.")

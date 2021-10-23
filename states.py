@@ -32,3 +32,8 @@ class DeleteDictionary(StatesGroup):
     get_dictionary = State()
     confirm = State()
     delete = State()
+
+
+class UploadFile(StatesGroup):
+    choose_name = State()
+    check_if_words_are_correct = State()
