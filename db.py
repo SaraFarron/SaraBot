@@ -103,7 +103,7 @@ def delete_row(table_name: str, field_name: str, field_value: Union[str, int, fl
     execute_sql(command)
 
 
-def get_data(table_name: str, field='*'):
+def get_data(table_name: str, field='*', order_by=None):
     """Get data from table. Leave field blank to get all rows"""
 
     if not is_table(table_name):
@@ -112,6 +112,9 @@ def get_data(table_name: str, field='*'):
     command = f"""
     SELECT {field} FROM "{table_name}"
     ;"""
+
+    if order_by:
+        command = command[:-1] + f" ORDER BY '{order_by}';"
 
     return execute_sql(command)
 

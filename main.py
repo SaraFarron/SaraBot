@@ -17,7 +17,7 @@ bot = Bot(environ.get('BOT_TOKEN'), parse_mode='HTML')
 dp = Dispatcher(bot, loop=loop, storage=MemoryStorage())
 
 
-async def on_startup():
+def on_startup():
     """Function that launches on startup"""
 
     tables = get_all_tables()
@@ -32,4 +32,5 @@ async def on_startup():
 
 if __name__ == '__main__':
     from handlers import dp
+    on_startup()
     executor.start_polling(dp)

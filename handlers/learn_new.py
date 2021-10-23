@@ -1,6 +1,7 @@
 from aiogram.types import Message, ReplyKeyboardRemove
 
 from . import dp, logger
+from db import get_data
 
 
 @dp.message_handler(state='*', commands=['learn'])
@@ -9,4 +10,5 @@ async def learn_new(message: Message):
 
     logger.info('Started learning')
 
-    await message.answer('Canceled.', reply_markup=ReplyKeyboardRemove())
+    get_data('learning', order_by='date_last_learned')
+#     TODO
