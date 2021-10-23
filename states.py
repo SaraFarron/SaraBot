@@ -1,11 +1,15 @@
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
-class AddWords(StatesGroup):
+class AddWord(StatesGroup):
     choose_dictionary = State()
     create_new = State()
     get_dictionary = State()
     get_translation_pair = State()
+
+
+class ShowWords(StatesGroup):
+    choose_dictionary = State()
 
 
 class DeleteWord(StatesGroup):

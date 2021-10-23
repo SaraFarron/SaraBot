@@ -32,7 +32,7 @@ async def delete_dictionary(call: CallbackQuery, state: FSMContext):
     if call.data == 'yes':
         data = await state.get_data()
         delete_table(data.get('dictionary name'))
-        await call.message.answer("Dictionary deleted successfully")  # TODO after this bot stops working
+        await call.message.answer("Dictionary deleted successfully")
     else:
         await call.message.answer('Canceled')
     await state.finish()

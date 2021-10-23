@@ -3,11 +3,11 @@ from aiogram.dispatcher import FSMContext
 from . import dp, logger
 
 from keyboards import all_dictionaries_keyboard, yes_no_answer
-from states import AddWords, CreateDictionary
+from states import AddWord, CreateDictionary
 from db import add_row
 
 
-@dp.message_handler(state=AddWords.choose_dictionary)
+@dp.message_handler(state=AddWord.choose_dictionary)
 @dp.message_handler(text='Add New Word')
 async def add_word(message: Message):
 
@@ -18,15 +18,15 @@ async def add_word(message: Message):
     if keyboard:
         await message.answer('Please choose dictionary at which words will be added:',
                              reply_markup=keyboard)
-        await AddWords.get_dictionary.set()
+        await AddWord.get_dictionary.set()
 
     else:
         await message.answer("You don't have any dictionaries yet, do you want to create one?",
                              reply_markup=yes_no_answer)
-        await AddWords.create_new.set()
+        await AddWord.create_new.set()
 
 
-@dp.callback_query_handler(state=AddWords.create_new)
+@dp.callback_query_handler(state=AddWord.create_new)
 async def create_new_dictionary(call: CallbackQuery, state: FSMContext):
 
     if call.message.text == 'yes':
@@ -38,7 +38,7 @@ async def create_new_dictionary(call: CallbackQuery, state: FSMContext):
         await state.finish()
 
 
-@dp.callback_query_handler(state=AddWords.get_dictionary)
+@dp.callback_query_handler(state=AddWord.get_dictionary)
 async def get_dictionary(call: CallbackQuery, state: FSMContext):
 
     dictionary_name = call.data
@@ -46,10 +46,10 @@ async def get_dictionary(call: CallbackQuery, state: FSMContext):
         data['dictionary name'] = dictionary_name
 
     await call.message.answer('Provide a pair of words in this format:\n русский english')
-    await AddWords.next()
+    await AddWord.next()
 
 
-@dp.message_handler(state=AddWords.get_translation_pair)
+@dp.message_handler(state=AddWord.get_translation_pair)
 async def get_translation_pair(message: Message, state: FSMContext):
 
     pair = message.text.split(' ')

@@ -24,6 +24,7 @@ def add_reply_buttons(buttons: list[str, ], keyboard: ReplyKeyboardMarkup):
 
 menu_buttons = [
     'Add New Word',
+    'Show Words In Dictionary',
     'Delete Word',
     'Add Dictionary',
     'Show All Dictionaries',

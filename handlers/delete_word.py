@@ -50,4 +50,3 @@ async def delete(call: CallbackQuery, state: FSMContext):
         await call.message.answer('Canceled')
 
     await state.finish()
-# TODO test entire thing
