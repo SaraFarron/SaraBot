@@ -22,8 +22,16 @@ async def get_dictionary_name(message: Message, state: FSMContext):
     async with state.proxy() as data:
         data['dictionary name'] = dictionary_name
 
-    if not is_table(dictionary_name):
-        create_table(dictionary_name, {'Russian': 'TEXT', 'English': 'TEXT'})
+    if dictionary_name == 'learned':  # TODO Test this
+        await message.answer(
+            'This name is used for a dictionary, that stores your learned words, please choose another one')
+        await CreateDictionary.get_dictionary_name.set()
 
-    await message.answer('New dictionary has been created!')
-    await state.finish()
+    elif not is_table(dictionary_name):
+        create_table(dictionary_name, {'Russian': 'TEXT', 'English': 'TEXT'})
+        await message.answer('New dictionary has been created!')
+        await state.finish()
+
+    else:
+        await message.answer('Dictionary names must be unique')
+        await CreateDictionary.get_dictionary_name.set()

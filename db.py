@@ -2,6 +2,11 @@ from psycopg2 import connect, DatabaseError
 from typing import Union
 
 
+class TableExistsException(Exception):
+    def __init__(self, message='Table already exists'):
+        super(TableExistsException, self).__init__(message)
+
+
 def execute_sql(command: str):
     """ Execute sql command and return result"""
 

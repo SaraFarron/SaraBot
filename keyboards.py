@@ -23,15 +23,16 @@ def add_reply_buttons(buttons: list[str, ], keyboard: ReplyKeyboardMarkup):
 
 
 menu_buttons = [
-    'Add New Word',
-    'Show Words In Dictionary',
+    'Show Learned',
+    'Add Word',
     'Delete Word',
+    'Show Dictionary',
     'Add Dictionary',
     'Show All Dictionaries',
     'Update Dictionary',
     'Delete Dictionary',
 ]
-menu = ReplyKeyboardMarkup()
+menu = ReplyKeyboardMarkup(resize_keyboard=True)  # TODO resize_keyboard=True doesn't work
 menu = add_reply_buttons(menu_buttons, menu)
 
 yes_no_buttons = {
@@ -65,5 +66,3 @@ def all_words_keyboard(dictionary_name):
     words = {w[0]: w[0] for w in words}
     keyboard = InlineKeyboardMarkup()
     return add_inline_buttons(words, keyboard)
-
-# TODO Make menu keyboard 2 column

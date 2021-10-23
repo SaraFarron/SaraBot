@@ -7,7 +7,7 @@ from states import ShowWords
 from . import dp, logger
 
 
-@dp.message_handler(text='Show Words In Dictionary')
+@dp.message_handler(text='Show Dictionary')
 async def delete_word(message: Message):
 
     logger.info('Entered show dictionary stage')

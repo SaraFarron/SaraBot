@@ -8,7 +8,7 @@ from db import add_row
 
 
 @dp.message_handler(state=AddWord.choose_dictionary)
-@dp.message_handler(text='Add New Word')
+@dp.message_handler(text='Add Word')
 async def add_word(message: Message):
 
     logger.info('Entered add word stage')
