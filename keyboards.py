@@ -65,3 +65,5 @@ def all_words_keyboard(dictionary_name):
     words = {w[0]: w[0] for w in words}
     keyboard = InlineKeyboardMarkup()
     return add_inline_buttons(words, keyboard)
+
+# TODO Make menu keyboard 2 column
